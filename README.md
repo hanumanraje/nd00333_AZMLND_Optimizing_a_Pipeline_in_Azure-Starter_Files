@@ -25,7 +25,7 @@ The training pipeline for SKLearn model is as follows:
 * Select the best model from the tuning
 * Save and register the model for the later use 
 
-I have chosen Random Sampling to choose the hyperparameters. This type of sampling is good for initial experiments and we can refine our search space in later experiments. 
+Random Sampling to choose the hyperparameters. This type of sampling is good for initial experiments and we can refine our search space in later experiments. 
 
 Random Sampling
 * Supports discrete and continuous hyperparameters
@@ -49,13 +49,15 @@ The pipeline for the best model is as follows:
 * The categorical columns were then Label Encoded and Vectorized using Count Vectorizer
 * Then that dataset is sent to the model for training
 
-Note: I removed the preprocessing step that was there in the sklearn pipeline to see how AutoML encodes/deals with different columns.
+
 
 ## Pipeline comparison
 
-* In SKLearn pipeline, we did not do data quality checks like imbalance in the classes etc.,However, In AutoML, there're Data Guardrails that performed these checks and alerted if anything failed. In our dataset, It alerted the class imbalance.
-* In SKLearn pipeline, we only built a single model and tuned the hyperparameters for that model whereas in AutoML, eventhough there's a time constraint it was able to build around 20 models in 30 mins.
-* The difference in accuracy between both the models is very less (0.32%). The AutoML's best model gave an accuracy of 91.68 while the logistic gave 91.36%. The reason for Ensemble to give higher score could be a factor of taking different classifiers and voting. Also, as we didn't treat the class imbalance in our dataset in the manual pipeline, a simple model like logistic regression tends to be biased towards the negtive class.
+The Voting Ensemble model outperform the Logistic Regression one with an accuracy of 0.9181 against 0.9129.
+
+The differences in architecture are huge:
+1. HyperDrive starts multiple runs each of which trains the LogisticRegression model using different tuples of hyper-parameters
+2. AutoML starts multiple runs each of which executes complex pipelines with choices of hyper-parameters, models and configuration details
 
 ## Future work
 
@@ -65,4 +67,10 @@ As always, we can also use AutoML to comeup with the best model by giving it mor
 
 ## Proof of cluster clean up
 
-I have included the code in the end of the notebook to delete the compute cluster
+#delete the compute cluster
+
+try:
+    AmlCompute.delete(compute_target)
+except:
+    print('Can not delete the cluster!')
+
