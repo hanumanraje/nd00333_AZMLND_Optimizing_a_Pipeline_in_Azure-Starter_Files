@@ -7,7 +7,6 @@ import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
-from azureml.core import Dataset
 from azureml.core.run import Run
 from azureml.data.dataset_factory import TabularDatasetFactory
 
@@ -36,27 +35,22 @@ def clean_data(data):
     x_df["poutcome"] = x_df.poutcome.apply(lambda s: 1 if s == "success" else 0)
 
     y_df = x_df.pop("y").apply(lambda s: 1 if s == "yes" else 0)
-    
+
     return x_df, y_df
+    
 
 # TODO: Create TabularDataset using TabularDatasetFactory
 # Data is located at:
-web_path = "https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv"
+# "https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv"
 
-
-#ds = ### YOUR CODE HERE ###
-ds = TabularDatasetFactory.from_delimited_files(path=web_path)
-
-
+ds = TabularDatasetFactory.from_delimited_files(path="https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv")### YOUR CODE HERE ###
 x, y = clean_data(ds)
-
-
 
 # TODO: Split data into train and test sets.
 
-x_train, x_test, y_train, y_test = train_test_split(x,y, test_size=0.2)
+### YOUR CODE HERE ###
 
-# ## YOUR CODE HERE ###a
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.3, random_state = 42)
 
 run = Run.get_context()
 
@@ -75,17 +69,13 @@ def main():
     run.log("Max iterations:", np.int(args.max_iter))
 
     model = LogisticRegression(C=args.C, max_iter=args.max_iter).fit(x_train, y_train)
+    # Prepare folder and save trained model
+    os.makedirs('outputs', exist_ok=True)
+    joblib.dump(model, "outputs/trained_model.joblib")
 
     accuracy = model.score(x_test, y_test)
     run.log("Accuracy", np.float(accuracy))
-
-    os.makedirs('outputs',exist_ok=True)
-    joblib.dump(model, filename = 'outputs/model.joblib')
-
+   
 
 if __name__ == '__main__':
     main()
-
-
-
-
