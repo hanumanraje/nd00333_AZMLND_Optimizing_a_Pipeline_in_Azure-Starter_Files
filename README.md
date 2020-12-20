@@ -29,7 +29,7 @@ The bandit policy allows us to implement early stopping based on the performance
 instead of either basing termination upon the performance relative to the median or whether a particular run is among a specified percentage
 of worst performing runs. 
 
-The explanations of the benefits of the chosen early stopping policy and the parameter sample are based upon the official Azure ML documentation on hyperparameter tuning: https://docs.microsoft.com/en-us/azure/machine-learning/how-to-tune-hyperparameters
+https://docs.microsoft.com/en-us/azure/machine-learning/how-to-tune-hyperparameters
 
 ## AutoML
 The model chosen by AutoML is a Voting Ensemble model which combines 'XGBoostClassifier', 'XGBoostClassifier', 'LightGBM', 'XGBoostClassifier', 'XGBoostClassifier' and 'SGD'.
