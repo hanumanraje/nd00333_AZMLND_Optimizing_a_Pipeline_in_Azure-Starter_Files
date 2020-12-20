@@ -49,3 +49,9 @@ models since there is no way to know ex-ante which model will perform best.
 
 Moreover, we may also want to reconsider our **performance measure** given that we are dealing with a highly **imbalanced dataset** where clients who subscribed to a term deposit account for only 11.20% of all cases. Rather than accuracy we may want to use a metric like AUC weighted offered by AutoML to obtain a more realistic assessment of model performance. Another way to deal with this issue would be to **collect
 additional data** of positive cases and/ or to use resampling techniques to create a balanced dataset. (For more information see e.g. https://towardsdatascience.com/methods-for-dealing-with-imbalanced-data-5b761be45a18)
+
+Proof of cluster clean up
+try:
+    AmlCompute.delete(compute_target)
+except:
+    print('Can not delete the cluster!')
