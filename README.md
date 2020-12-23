@@ -114,6 +114,4 @@ BanditPolicy first trains a model and identifies its accuracy. Once it has a bas
  - We can try other preprocessing techniques including the clean_data function in train.py like sci-kit learns imputer which can help students increase their ETL knowledge.
  - We can probably collect more data and vary the cross_validations and change the experiment_timeout so that AutoML tries out several models and preprocessing steps to come up with the model having the best performance.
 
-## Proof of Cluster Cleanup
-I deleted the cluster from the ML Studio's compute section.
-![clean](./clean.png "Cluster deletion")
+
