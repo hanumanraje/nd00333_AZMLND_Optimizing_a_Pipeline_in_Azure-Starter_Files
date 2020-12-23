@@ -10,6 +10,12 @@ import pandas as pd
 from azureml.core.run import Run
 from azureml.data.dataset_factory import TabularDatasetFactory
 
+# TODO: Create TabularDataset using TabularDatasetFactory
+# Data is located at:
+# "https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv"
+
+ds = TabularDatasetFactory.from_delimited_files("https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv")
+
 def clean_data(data):
     # Dict for cleaning data
     months = {"jan":1, "feb":2, "mar":3, "apr":4, "may":5, "jun":6, "jul":7, "aug":8, "sep":9, "oct":10, "nov":11, "dec":12}
@@ -35,25 +41,15 @@ def clean_data(data):
     x_df["poutcome"] = x_df.poutcome.apply(lambda s: 1 if s == "success" else 0)
 
     y_df = x_df.pop("y").apply(lambda s: 1 if s == "yes" else 0)
-
     return x_df, y_df
-    
 
-# TODO: Create TabularDataset using TabularDatasetFactory
-# Data is located at:
-# "https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv"
-
-ds = TabularDatasetFactory.from_delimited_files(path="https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv")### YOUR CODE HERE ###
 x, y = clean_data(ds)
 
 # TODO: Split data into train and test sets.
 
-### YOUR CODE HERE ###
-
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.3, random_state = 42)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
 run = Run.get_context()
-
 
 
 def main():
@@ -69,13 +65,19 @@ def main():
     run.log("Max iterations:", np.int(args.max_iter))
 
     model = LogisticRegression(C=args.C, max_iter=args.max_iter).fit(x_train, y_train)
-    # Prepare folder and save trained model
-    os.makedirs('outputs', exist_ok=True)
-    joblib.dump(model, "outputs/trained_model.joblib")
 
     accuracy = model.score(x_test, y_test)
     run.log("Accuracy", np.float(accuracy))
-   
+    
+    #Missing part, need to serialize the model once it is trained, because azure only maintains logs and not the model.
+#     if not os.path.isdir('./runs'):
+#         os.mkdir('./runs')
+    os.makedirs('outputs', exist_ok=True)
+    joblib.dump(model, 'outputs/run_'+str(accuracy)+"__"+str(args.C)+"_"+str(args.max_iter)+'.joblib')
 
 if __name__ == '__main__':
     main()
+
+# !ls
+
+
